@@ -1,12 +1,13 @@
 
 using ECommerce.Extention;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace ECommerce
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -27,8 +28,8 @@ namespace ECommerce
 
             #region DataSeed
 
-            app.MigrateDB();
-            app.SeedDb();
+          await  app.MigrateDB();
+          await  app.SeedDb();
 
             #endregion
 

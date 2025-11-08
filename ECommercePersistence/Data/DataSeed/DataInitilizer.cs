@@ -19,32 +19,32 @@ namespace ECommercePersistence.Data.DataSeed
         {
            _storeDbContext = storeDbContext;
         }
-        public void Initilize()
+        public async Task  InitilizeAsync()
         {
             try
             {
-                var HasProducts = _storeDbContext.Products.Any();
-                var HasProductBrands = _storeDbContext.ProductBrands.Any();
-                var HasProductTypes = _storeDbContext.ProductTypes.Any();
+                var HasProducts = await _storeDbContext.Products.AnyAsync();
+                var HasProductBrands = await _storeDbContext.ProductBrands.AnyAsync();
+                var HasProductTypes = await _storeDbContext.ProductTypes.AnyAsync();
                 if (HasProducts && HasProductBrands && HasProductTypes)
                 {
                     return;
                 }
                 if (!HasProductBrands)
                 {
-                    SeedDataFromJson< ECommerceDomain.Entities.ProductModule.ProductBrand,int>("brands.json", _storeDbContext.ProductBrands);
+                   await SeedDataFromJson< ECommerceDomain.Entities.ProductModule.ProductBrand,int>("brands.json", _storeDbContext.ProductBrands);
                    
 
                 }
                 if (!HasProductTypes)
                 {
-                    SeedDataFromJson< ECommerceDomain.Entities.ProductModule.ProductType,int>("types.json", _storeDbContext.ProductTypes);
+                    await SeedDataFromJson< ECommerceDomain.Entities.ProductModule.ProductType,int>("types.json", _storeDbContext.ProductTypes);
                 }
                 _storeDbContext.SaveChanges();
 
                 if (!HasProducts)
                 {
-                    SeedDataFromJson< ECommerceDomain.Entities.ProductModule.Product,int>("products.json", _storeDbContext.Products);
+                    await SeedDataFromJson< ECommerceDomain.Entities.ProductModule.Product,int>("products.json", _storeDbContext.Products);
 
                 }
                 _storeDbContext.SaveChanges();
@@ -56,7 +56,7 @@ namespace ECommercePersistence.Data.DataSeed
             }
             
         }
-        private void SeedDataFromJson<T,TKey>(string fileName,DbSet<T> dbset) where T : BaseEntity<TKey>
+        private async Task SeedDataFromJson<T,TKey>(string fileName,DbSet<T> dbset) where T : BaseEntity<TKey>
         {
             //filepath 
             //D:\Arwa\.Net\C#\ECommerceSolution\ECommercePersistence\Data\DataSeed\JSONFiles\brands.json
@@ -71,7 +71,7 @@ namespace ECommercePersistence.Data.DataSeed
                 });
                 if (data != null )
                 {
-                    dbset.AddRange(data);
+                   await dbset.AddRangeAsync(data);
                    
                 }
 
