@@ -1,5 +1,8 @@
 
 using ECommerce.Extention;
+using ECommerceDomain.Contarcts;
+using ECommercePersistence.Repositires;
+using ECommerceService.MappingProfile;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -24,7 +27,11 @@ namespace ECommerce
             });
             builder.Services.AddScoped<ECommerceDomain.Contarcts.IDataInitilizer, ECommercePersistence.Data.DataSeed.DataInitilizer>();
 
-            var app = builder.Build();
+            builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+
+            builder.Services.AddAutoMapper(X => X.AddProfile<ProductProfile>());
+
+           var app = builder.Build();
 
             #region DataSeed
 
