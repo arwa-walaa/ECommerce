@@ -2,7 +2,9 @@
 using ECommerce.Extention;
 using ECommerceDomain.Contarcts;
 using ECommercePersistence.Repositires;
+using ECommerceService;
 using ECommerceService.MappingProfile;
+using ECommerceServiceApstarction;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -28,6 +30,7 @@ namespace ECommerce
             builder.Services.AddScoped<ECommerceDomain.Contarcts.IDataInitilizer, ECommercePersistence.Data.DataSeed.DataInitilizer>();
 
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+            builder.Services.AddScoped<IProductService, ProductService>();
 
             builder.Services.AddAutoMapper(X => X.AddProfile<ProductProfile>());
 
