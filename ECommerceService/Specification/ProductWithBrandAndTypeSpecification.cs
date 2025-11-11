@@ -1,4 +1,5 @@
-﻿using ECommerceDomain.Entities.ProductModule;
+﻿using ECommerce.Shared;
+using ECommerceDomain.Entities.ProductModule;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,14 @@ namespace ECommerceService.Specification
 {
     public class ProductWithBrandAndTypeSpecification :BaseSpecification<Product,int>
     {
-        public ProductWithBrandAndTypeSpecification(int? brandId, int? typeId) :base
-            (P=>(!brandId.HasValue || P.BrandId==brandId.Value) && (!typeId.HasValue || P.TypeId == typeId.Value)) {
+        public ProductWithBrandAndTypeSpecification(ProductQueryPram productPram) : base
+            (
+                P =>
+                    (!productPram.BrandId.HasValue || P.BrandId == productPram.BrandId.Value)
+                    && (!productPram.TypeId.HasValue || P.TypeId == productPram.TypeId.Value)
+                    && (string.IsNullOrEmpty(productPram.Serach) || P.Name.ToLower().Contains(productPram.Serach.ToLower()))
+            )
+        {
         
             AddInclude(p => p.ProductBrands);
             AddInclude(p => p.ProductTypes);

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ECommerce.Shared;
 using ECommerce.Shared.DTOS.ProductDtos;
 using ECommerceDomain.Contarcts;
 using ECommerceDomain.Entities.ProductModule;
@@ -29,9 +30,9 @@ namespace ECommerceService
 
         }
 
-        public async Task<IEnumerable<ProductDTO>> GetAllProductAsync(int? brandId, int? typeId)
+        public async Task<IEnumerable<ProductDTO>> GetAllProductAsync(ProductQueryPram productPram)
         {
-            var Spec= new ProductWithBrandAndTypeSpecification(brandId,typeId);
+            var Spec= new ProductWithBrandAndTypeSpecification(productPram);
 
             var Products = await _unitOfWork.GetRepo<Product, int>().GetAllAsync(Spec);
             return _mapper.Map<IEnumerable<ProductDTO>>(Products);
