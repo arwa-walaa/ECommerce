@@ -22,6 +22,12 @@ namespace ECommerceService.Specification
 
         public Expression<Func<TEntity, object>> OrderByDescending { get;  private set; }
 
+        public int Skip { get; private set; }
+
+        public int Take { get; private set; }
+
+        public bool IsPaginatged { get; set; }
+
         //method to add include to property
 
         protected void AddInclude(Expression<Func<TEntity, object>> includeExpression)
@@ -37,6 +43,14 @@ namespace ECommerceService.Specification
         protected void AddOrderByDescending(Expression<Func<TEntity, object>> orderByDescExpression)
         {
             OrderByDescending = orderByDescExpression;
+        }
+
+        protected void ApplyPagenation(int pageSize, int pageIndex)
+        {
+           
+            Take = pageSize;
+            IsPaginatged = true;
+            Skip = (pageIndex-1)*pageSize;
         }
     }
 }

@@ -8,20 +8,44 @@ namespace ECommerce.Shared
 {
     public class ProductQueryPram
     {
-        //private const int MaxPageSize = 50;
-        //public int PageIndex { get; set; } = 1;
-        //private int _pageSize = 6;
-        //public int PageSize
-        //{
-        //    get => _pageSize;
-        //    set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
-        //}
+      
         public int? BrandId { get; set; }
         public int? TypeId { get; set; }
 
         public string? Serach { get; set; }
 
         public ProductSortingOptions? sort { get; set; }
+
+        private int _pageIndex = 1;
+        public int PageIndex
+        {
+            get { return _pageIndex; }
+            set { _pageIndex = (value <= 0) ? 1 : value; }
+        }
+        private const int PageCount = 5;
+        private const int MaxPageSize = 10;
+
+        private int _pageSize = 5;
+        public int PageSize
+        {
+            get { return _pageSize; }
+            set {
+                if (value > MaxPageSize)
+                {
+                    _pageSize = MaxPageSize;
+                }
+                else if(value <=0)
+                {
+                    _pageSize = PageCount;
+                }
+                else
+                {
+                    _pageSize = value;
+                }
+
+
+                }
+        }
 
 
 
