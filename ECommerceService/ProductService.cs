@@ -30,12 +30,25 @@ namespace ECommerceService
 
         }
 
-        public async Task<IEnumerable<ProductDTO>> GetAllProductAsync(ProductQueryPram productPram)
+        public async Task<PaginatedResult<ProductDTO>> GetAllProductAsync(ProductQueryPram productPram)
         {
             var Spec= new ProductWithBrandAndTypeSpecification(productPram);
 
             var Products = await _unitOfWork.GetRepo<Product, int>().GetAllAsync(Spec);
-            return _mapper.Map<IEnumerable<ProductDTO>>(Products);
+            var DataToReturn= _mapper.Map<IEnumerable<ProductDTO>>(Products);
+            var CountOfReturnedData = DataToReturn.Count();
+            var CountSpec = new ProductWithBrandAndTypeSpecification(productPram);
+            var countOfProducts = await _unitOfWork.GetRepo<Product, int>().CountAsync(CountSpec);
+
+            return new PaginatedResult<ProductDTO>
+            (
+                productPram.PageIndex,
+           
+                CountOfReturnedData,
+
+               countOfProducts,
+                DataToReturn
+            );
         }
 
         public async Task<IEnumerable<TypeDTO>> GetAllTypesAsync()
