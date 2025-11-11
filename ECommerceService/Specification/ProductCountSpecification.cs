@@ -13,10 +13,7 @@ namespace ECommerceService.Specification
 
         public ProductCountSpecification(ProductQueryPram productPram) : base
             (
-                P =>
-                    (!productPram.BrandId.HasValue || P.BrandId == productPram.BrandId.Value)
-                    && (!productPram.TypeId.HasValue || P.TypeId == productPram.TypeId.Value)
-                    && (string.IsNullOrEmpty(productPram.Serach) || P.Name.ToLower().Contains(productPram.Serach.ToLower()))
+                ProductSpesificationHelper.GetProductCriteria(productPram)
             )
         {
 
