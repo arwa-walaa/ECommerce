@@ -19,12 +19,23 @@ namespace ECommercePersistence
                 {
                     query = query.Where(specification.Criteria);
                 }
+              
+
                 //include
                 if (specification.IncludeExpression is not null && specification.IncludeExpression.Any())
                 {
                   
                     query = specification.IncludeExpression.Aggregate
                     (query, (current, include) => current.Include(include));
+                }
+                //order by
+                if (specification.OrderBy is not null)
+                {
+                    query = query.OrderBy(specification.OrderBy);
+                }
+                if (specification.OrderByDescending is not null)
+                {
+                    query = query.OrderByDescending(specification.OrderByDescending);
                 }
             }
             return query;

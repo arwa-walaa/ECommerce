@@ -21,5 +21,9 @@ namespace ECommerce.Shared
 
         public string? Serach { get; set; }
 
+        public ProductSortingOptions? sort { get; set; }
+
+
+
     }
 }
