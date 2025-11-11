@@ -43,5 +43,12 @@ namespace ECommercePersistence.Repositires
            var query = SpecificationEvaluator.CreateQuery(_dbContext.Set<TEntity>(), specification);
               return await query.ToListAsync();
         }
+
+        public async Task<TEntity?> GetByIdAsync(ISpecification<TEntity, TKey> specification)
+        {
+            var query = SpecificationEvaluator.CreateQuery(_dbContext.Set<TEntity>(), specification);
+            return await query.FirstOrDefaultAsync();
+
         }
+    }
 }
