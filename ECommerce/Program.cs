@@ -6,6 +6,7 @@ using ECommerceService;
 using ECommerceService.MappingProfile;
 using ECommerceServiceApstarction;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using System.Threading.Tasks;
 
 namespace ECommerce
@@ -34,7 +35,14 @@ namespace ECommerce
 
             builder.Services.AddAutoMapper(X => X.AddProfile<ProductProfile>());
 
-           var app = builder.Build();
+            builder.Services.AddSingleton<IConnectionMultiplexer>(O =>
+            {
+               
+                return ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnection")!);
+            } );
+
+
+            var app = builder.Build();
 
             #region DataSeed
 
