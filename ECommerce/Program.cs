@@ -33,6 +33,7 @@ namespace ECommerce
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IBasketRepo, BasketRepo>();
+            builder.Services.AddScoped<IBasketService, BasketService>();
 
             builder.Services.AddAutoMapper(X => X.AddProfile<ProductProfile>());
             builder.Services.AddAutoMapper(X => X.AddProfile<BasketProfile>());
