@@ -1,14 +1,17 @@
 
 using ECommerce.CustomMiddleWares;
 using ECommerce.Extention;
+using ECommerce.Factories;
 using ECommerceDomain.Contarcts;
 using ECommercePersistence.Repositires;
 using ECommerceService;
 using ECommerceService.MappingProfile;
 using ECommerceServiceApstarction;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ECommerce
@@ -43,7 +46,13 @@ namespace ECommerce
             builder.Services.AddAutoMapper(X => X.AddProfile<BasketProfile>());
 
 
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory 
+               = ApiResponseFactory.CreateApiResponse;
+               
 
+            });
 
             builder.Services.AddSingleton<IConnectionMultiplexer>(O =>
             {

@@ -61,6 +61,10 @@ namespace ECommerceService
         {
             var Spec = new ProductWithBrandAndTypeSpecification( id );
             var product = await _unitOfWork.GetRepo<Product,int>().GetByIdAsync(Spec);
+            if (product is null)
+            {
+                throw new Exceptions.ProductNotFoundException(id);
+            }
             return _mapper.Map<ProductDTO>(product);
         }
     }
