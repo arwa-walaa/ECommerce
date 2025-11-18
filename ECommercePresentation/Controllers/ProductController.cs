@@ -22,6 +22,7 @@ namespace ECommercePresentation.Controllers
         }
 
         [HttpGet]
+        //[Cache]
         //brandID typeID
         public async Task<ActionResult<PaginatedResult<ProductDTO>>> GetAllProducts([FromQuery]ProductQueryPram productPram)
         {
