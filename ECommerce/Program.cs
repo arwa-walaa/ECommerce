@@ -58,6 +58,32 @@ namespace ECommerce
           await  app.SeedDb();
 
             #endregion
+            //Exception here 
+            app.Use(async(Context,Next)=>
+            {
+               
+                try
+                {
+                    await Next();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Context.Response.StatusCode = StatusCodes.Status500InternalServerError ;
+                    await Context.Response.WriteAsJsonAsync(new 
+                    {
+                        StatusCode = StatusCodes.Status500InternalServerError,
+                        Error =$"Something went wrong , {ex.Message}"
+
+                    });
+
+
+                }
+
+
+            });
+
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
