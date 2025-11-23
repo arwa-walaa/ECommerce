@@ -49,26 +49,49 @@ namespace ECommerce.Shared.CommenResults
         public T Valuet => IsSuccess ? _Value : throw new InvalidOperationException("Cannot access the value of a failed result.");
 
         //No errors 
-        private Result(T value) : base() {
+        private Result(T value) : base()
+        {
             _Value = value;
         }
         //one error occurred
-        private Result(Error error) : base(error) {
+        private Result(Error error) : base(error)
+        {
             _Value = default!;
         }
         //multiple errors occurred
-        private Result(List<Error> errors) : base(errors) {
+        private Result(List<Error> errors) : base(errors)
+        {
             _Value = default!;
         }
         //static methods
-        public static Result<T> Ok(T value) {
+        public static Result<T> Ok(T value)
+        {
             return new Result<T>(value);
         }
-        public static new Result<T> Fail(Error error) {
+        public static new Result<T> Fail(Error error)
+        {
             return new Result<T>(error);
         }
-        public static new Result<T> Fail(List<Error> errors) {
+        public static new Result<T> Fail(List<Error> errors)
+        {
             return new Result<T>(errors);
         }
+        //implicit conversion
+        public static implicit operator Result<T>(T value)
+        {
+            return Ok(value);
+        }
+
+        public static implicit operator Result<T>(Error error)
+        {
+            return Fail(error);
+        }
+
+        public static implicit operator Result<T>(List<Error> errors)
+        {
+            return Fail(errors);
+        }
+
+
     }
 }

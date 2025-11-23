@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using ECommerce.Shared;
+using ECommerce.Shared.CommenResults;
 using ECommerce.Shared.DTOS.ProductDtos;
 using ECommerceDomain.Contarcts;
 using ECommerceDomain.Entities.ProductModule;
+using ECommerceService.Exceptions;
 using ECommerceService.Specification;
 using ECommerceServiceApstarction;
 using System;
@@ -57,13 +59,14 @@ namespace ECommerceService
             return _mapper.Map<IEnumerable<TypeDTO>>(Types);
         }
 
-        public async Task<ProductDTO> GetProductByIdAsync(int id)
+        public async Task<Result<ProductDTO>> GetProductByIdAsync(int id)
         {
             var Spec = new ProductWithBrandAndTypeSpecification( id );
             var product = await _unitOfWork.GetRepo<Product,int>().GetByIdAsync(Spec);
             if (product is null)
             {
-                throw new Exceptions.ProductNotFoundException(id);
+              
+                return Error.NotFound(description: $"Product with id {id} not found."); 
             }
             return _mapper.Map<ProductDTO>(product);
         }
