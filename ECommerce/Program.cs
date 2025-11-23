@@ -3,6 +3,7 @@ using ECommerce.CustomMiddleWares;
 using ECommerce.Extention;
 using ECommerce.Factories;
 using ECommerceDomain.Contarcts;
+using ECommercePersistence.IdentityData.DBContext;
 using ECommercePersistence.Repositires;
 using ECommerceService;
 using ECommerceService.MappingProfile;
@@ -60,12 +61,18 @@ namespace ECommerce
                 return ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("RedisConnection")!);
             } );
 
+            builder.Services.AddDbContext<StoreIdentityDBContext>(options => {   
+                options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
+            });
 
+            //Add-Migration  "IdentityTablecreate" -OutDir "Identit" -Context StoreIdentityDBContext
+            //Add-Migration "IdentityTableCreate" -OutputDir "Identity/Migrations" -Context "StoreIdentityDBContext"
             var app = builder.Build();
 
             #region DataSeed
 
           await  app.MigrateDB();
+            await app.MigrateIDentityDB();
           await  app.SeedDb();
 
             #endregion

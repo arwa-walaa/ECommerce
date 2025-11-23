@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ECommercePersistence.IdentityData.DBContext;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace ECommerce.Extention
@@ -11,6 +12,19 @@ namespace ECommerce.Extention
             var dbContextService = scope.ServiceProvider.GetRequiredService<ECommercePersistence.Data.DbContext.StoreDbContext>();
             var pendingMigration = await dbContextService.Database.GetPendingMigrationsAsync();
             if (pendingMigration.Any()) {
+                await dbContextService.Database.MigrateAsync();
+            }
+            return app;
+
+        }
+
+        public static async Task<WebApplication> MigrateIDentityDB(this WebApplication app)
+        {
+            await using var scope = app.Services.CreateAsyncScope();
+            var dbContextService = scope.ServiceProvider.GetRequiredService<StoreIdentityDBContext>();
+            var pendingMigration = await dbContextService.Database.GetPendingMigrationsAsync();
+            if (pendingMigration.Any())
+            {
                 await dbContextService.Database.MigrateAsync();
             }
             return app;
