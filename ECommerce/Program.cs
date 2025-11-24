@@ -3,6 +3,7 @@ using ECommerce.CustomMiddleWares;
 using ECommerce.Extention;
 using ECommerce.Factories;
 using ECommerceDomain.Contarcts;
+using ECommerceDomain.Entities.IdentityModule;
 using ECommercePersistence.IdentityData.DBContext;
 using ECommercePersistence.Repositires;
 using ECommerceService;
@@ -11,6 +12,7 @@ using ECommerceServiceApstarction;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,8 +36,8 @@ namespace ECommerce
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-            builder.Services.AddScoped<ECommerceDomain.Contarcts.IDataInitilizer, ECommercePersistence.Data.DataSeed.DataInitilizer>();
-
+            builder.Services.AddKeyedScoped<ECommerceDomain.Contarcts.IDataInitilizer, ECommercePersistence.Data.DataSeed.DataInitilizer>("Default");
+            builder.Services.AddKeyedScoped<ECommerceDomain.Contarcts.IDataInitilizer, ECommercePersistence.Data.DataSeed.DataInitilizerIdentity>("Identity");
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IBasketRepo, BasketRepo>();
@@ -65,15 +67,21 @@ namespace ECommerce
                 options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
             });
 
+            //builder.Services.AddIdentity<ECommerceDomain.Entities.IdentityModule.ApplicationUser, Microsoft.AspNetCore.Identity.IdentityRole>()
+            //    .AddEntityFrameworkStores<StoreIdentityDBContext>();
+               builder.Services.AddIdentityCore< ApplicationUser >().
+                AddRoles<Microsoft.AspNetCore.Identity.IdentityRole>().
+                AddEntityFrameworkStores<StoreIdentityDBContext>();
             //Add-Migration  "IdentityTablecreate" -OutDir "Identit" -Context StoreIdentityDBContext
             //Add-Migration "IdentityTableCreate" -OutputDir "Identity/Migrations" -Context "StoreIdentityDBContext"
             var app = builder.Build();
 
             #region DataSeed
 
-          await  app.MigrateDB();
-            await app.MigrateIDentityDB();
-          await  app.SeedDb();
+              await  app.MigrateDB();
+              await  app.MigrateIDentityDB();
+              await  app.SeedDb();
+              await  app.SeedIdentityDb();
 
             #endregion
             //Exception here 
