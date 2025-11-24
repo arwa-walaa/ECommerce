@@ -45,7 +45,9 @@ namespace ECommerce
 
             builder.Services.AddScoped<ICachRepo, CachRepo>();
             builder.Services.AddScoped<ICachService, CachService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddAutoMapper(X => X.AddProfile<ProductProfile>());
+
             builder.Services.AddAutoMapper(X => X.AddProfile<BasketProfile>());
 
 
