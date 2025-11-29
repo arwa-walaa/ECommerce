@@ -9,10 +9,12 @@ using ECommercePersistence.Repositires;
 using ECommerceService;
 using ECommerceService.MappingProfile;
 using ECommerceServiceApstarction;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -76,6 +78,28 @@ namespace ECommerce
                 AddEntityFrameworkStores<StoreIdentityDBContext>();
             //Add-Migration  "IdentityTablecreate" -OutDir "Identit" -Context StoreIdentityDBContext
             //Add-Migration "IdentityTableCreate" -OutputDir "Identity/Migrations" -Context "StoreIdentityDBContext"
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme =JwtBearerDefaults.AuthenticationScheme; //Auth
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;//UnAuth
+
+            }).AddJwtBearer(options =>
+            {
+
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters() { 
+                
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["JWTOptions:Audience"],
+                    ValidIssuer = builder.Configuration["JWTOptions:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWTOptions:SecretKey"]!))
+
+                };
+
+            });
+
             var app = builder.Build();
 
             #region DataSeed
@@ -100,6 +124,7 @@ namespace ECommerce
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
