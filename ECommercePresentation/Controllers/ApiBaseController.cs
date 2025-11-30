@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -91,6 +92,11 @@ namespace ECommercePresentation.Controllers
                 ErrorType.Failure => StatusCodes.Status500InternalServerError,
                 _ => StatusCodes.Status500InternalServerError,
             };
+        }
+
+        protected string? GetEmailFromToken()
+        {
+            return User.FindFirstValue(ClaimTypes.Email);
         }
 
     }
