@@ -13,5 +13,11 @@ namespace ECommerceServiceApstarction
         //create order ()
         //orderDTO [A]
         Task<Result<OrderToReturnDTO>> CreateOrderAsync( OrderDTO orderDTO , string Email);
+
+        Task<Result<IEnumerable<OrderToReturnDTO>>> GetAllOrdersAsync(string Email);
+
+        Task<Result<OrderToReturnDTO>> GetOrderByIdAsync(Guid orderId , string Email);
+
+        Task <Result<IEnumerable<DeliveryMethodDTO>>> GetAllDeliveryMethodsAsync();
     }
 }

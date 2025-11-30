@@ -5,6 +5,7 @@ using ECommerceDomain.Contarcts;
 using ECommerceDomain.Entities.BasketModule;
 using ECommerceDomain.Entities.OrderModule;
 using ECommerceDomain.Entities.ProductModule;
+using ECommerceService.Specification;
 using ECommerceServiceApstarction;
 using System;
 using System.Collections.Generic;
@@ -76,6 +77,36 @@ namespace ECommerceService
 
 
             };
+        }
+
+        public async Task<Result<IEnumerable<OrderToReturnDTO>>> GetAllOrdersAsync(string Email)
+        {
+            var Spec = new OrderSpecification(Email);
+            var orders = await _unitOfWork.GetRepo<Order, Guid>().GetAllAsync(Spec);
+            if(!orders.Any()) return Error.NotFound("No orders found for this user!");
+            var orderDTOs = _mapper.Map< IEnumerable<OrderToReturnDTO>>(orders);
+            return Result<IEnumerable<OrderToReturnDTO>>.Ok( orderDTOs);
+
+        }
+
+        public async Task<Result<OrderToReturnDTO>> GetOrderByIdAsync(Guid orderId, string Email)
+        {
+            var spec = new OrderSpecification(Email, orderId);
+            var order = await _unitOfWork.GetRepo<Order, Guid>().GetByIdAsync(spec);
+            if (order == null) return Error.NotFound("Order not found!");
+      
+            return _mapper.Map<OrderToReturnDTO>(order);
+
+        }
+
+        public async Task<Result<IEnumerable<DeliveryMethodDTO>>> GetAllDeliveryMethodsAsync()
+        {
+           
+            var deliveryMethods = await _unitOfWork.GetRepo<DeliveryMethod, int>().GetAllAsync();
+            if(!deliveryMethods.Any()) return Error.NotFound("No delivery methods found!");
+            var deliveryMethodDTOs = _mapper.Map<IEnumerable<DeliveryMethod>,IEnumerable<DeliveryMethodDTO> >(deliveryMethods);
+            return Result<IEnumerable<DeliveryMethodDTO>>.Ok(deliveryMethodDTOs);
+            
         }
     }
 }

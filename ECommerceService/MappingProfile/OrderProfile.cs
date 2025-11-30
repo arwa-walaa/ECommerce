@@ -21,6 +21,8 @@ namespace ECommerceService.MappingProfile
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.ProductName))
                 .ForMember(dest => dest.PictureUrl, opt => opt.MapFrom(src => src.Product.PictureUrl));
 
+            CreateMap<DeliveryMethod, DeliveryMethodDTO>();
+
 
         }
     }
