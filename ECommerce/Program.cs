@@ -49,6 +49,7 @@ namespace ECommerce
             builder.Services.AddScoped<ICachService, CachService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddAutoMapper(X => X.AddProfile<ProductProfile>());
 
             builder.Services.AddAutoMapper(X => X.AddProfile<BasketProfile>());

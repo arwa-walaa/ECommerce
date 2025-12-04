@@ -33,6 +33,22 @@ namespace ECommerceService
             var orderAddress = _mapper.Map<OrderAddress>(orderDTO.Address);
             var basket = await  _basketRepo.GetBasketAsync(orderDTO.BasketId);
             if (basket == null) return Error.NotFound("Basket not found!");
+
+
+            //payment
+
+            ArgumentException.ThrowIfNullOrEmpty(basket.PaymentIntentId, "Payment Intent Id is null or empty!");
+
+            var orderRepo = _unitOfWork.GetRepo<Order, Guid>();
+            var spec = new OrderByPaymentIntentIdSpecification(basket.PaymentIntentId);
+            var existingOrder = await orderRepo.GetByIdAsync(spec);
+
+            if (existingOrder != null)
+            {
+                orderRepo.Delete(existingOrder);
+                
+            }
+
             List<OrderItem> orderItems = new List<OrderItem>();
             foreach (var item in basket.Items)
             {
@@ -52,7 +68,8 @@ namespace ECommerceService
                 Address = orderAddress,
                 DeliveryMethod = DeliveryMethod,
                 Items = orderItems,
-                Subtotal = subtotal
+                Subtotal = subtotal,
+                PaymentIntentId = basket.PaymentIntentId
             };
             await _unitOfWork.GetRepo<Order, Guid>().AddAsync(order);
             var result = await _unitOfWork.SaveChangesAsync();

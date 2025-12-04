@@ -29,6 +29,8 @@ namespace ECommerceDomain.Entities.OrderModule
             return Subtotal + DeliveryMethod.Price;
         }
 
+        public string? PaymentIntentId { get; set; } 
+
 
     }
 }

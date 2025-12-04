@@ -6,5 +6,10 @@ using System.Threading.Tasks;
 
 namespace ECommerce.Shared.DTOS.BasketDTOs
 {
-    public record BasketDTO(string id, ICollection<BasketItemDTO> items);
+    public record BasketDTO(string id, ICollection<BasketItemDTO> items
+        , string? ClientSecret, string? PaymentIntentId, int? DeliveryMethodId, decimal? ShippingPrice
+
+        );
+    
+
 }
